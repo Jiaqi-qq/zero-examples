@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+
 	filter := stringx.NewTrie([]string{
 		"AV演员",
 		"苍井空",

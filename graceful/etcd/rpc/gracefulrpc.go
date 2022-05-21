@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-var configFile = flag.String("f", "etc/config.json", "the config file")
+var configFile = flag.String("f", "etc/graceful-rpc.json", "the config file")
 
 type GracefulServer struct{}
 

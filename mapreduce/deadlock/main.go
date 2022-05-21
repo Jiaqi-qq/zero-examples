@@ -27,6 +27,12 @@ func main() {
 		writer.Write(user)
 	}, func(pipe <-chan interface{}, writer mr.Writer, cancel func(error)) {
 		// missing writer.Write(...), should not panic
+		//var users []*User
+		//for x := range pipe {
+		//	fmt.Println(x)
+		//	users = append(users, x.(*User))
+		//}
+		//writer.Write(users)
 	})
 	if err != nil {
 		log.Print(err)

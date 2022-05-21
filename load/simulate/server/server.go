@@ -24,7 +24,7 @@ func main() {
 		}
 	}()
 
-	logx.Disable()
+	//logx.Disable()
 	engine := rest.MustNewServer(rest.RestConf{
 		ServiceConf: service.ServiceConf{
 			Log: logx.LogConf{

@@ -1,6 +1,7 @@
 package sharding
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -46,7 +47,7 @@ func TestSiphash64(t *testing.T) {
 
 	for shard, ids := range users {
 		for _, id := range ids {
-			assert.Equal(t, uint64(shard), sharding(id))
+			fmt.Println(assert.Equal(t, uint64(shard), sharding(id)))
 		}
 	}
 }

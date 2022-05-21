@@ -33,37 +33,36 @@ func main() {
 	done := make(chan lang.PlaceholderType)
 	go func() {
 		for {
-			time.Sleep(time.Second)
-			fmt.Println(runtime.NumGoroutine())
+			time.Sleep(time.Second * 3)
+			fmt.Println("num goroutine: ", runtime.NumGoroutine())
 		}
 	}()
 	go func() {
-		time.Sleep(time.Minute)
+		time.Sleep(time.Second * 5)
 		dumpGoroutines()
+		time.Sleep(time.Minute)
 		close(done)
 	}()
-	for {
-		select {
-		case <-done:
-			return
-		default:
-			mr.MapReduce(func(source chan<- interface{}) {
-				for i := 0; i < 100; i++ {
-					source <- i
-				}
-			}, func(item interface{}, writer mr.Writer, cancel func(error)) {
-				if item.(int) == 40 {
-					cancel(errors.New("any"))
-					return
-				}
-				writer.Write(item)
-			}, func(pipe <-chan interface{}, writer mr.Writer, cancel func(error)) {
-				list := make([]int, 0)
-				for p := range pipe {
-					list = append(list, p.(int))
-				}
-				writer.Write(list)
-			})
-		}
+	for i := 0; i < 2; i++ {
+		mr.MapReduce(func(source chan<- interface{}) {
+			for i := 0; i < 100; i++ {
+				source <- i
+			}
+		}, func(item interface{}, writer mr.Writer, cancel func(error)) {
+			if item.(int) == 40 {
+				cancel(errors.New("any"))
+				return
+			}
+			writer.Write(item)
+		}, func(pipe <-chan interface{}, writer mr.Writer, cancel func(error)) {
+			list := make([]int, 0)
+			for p := range pipe {
+				list = append(list, p.(int))
+			}
+			fmt.Println(list)
+			writer.Write(list)
+		})
 	}
+
+	<-done
 }

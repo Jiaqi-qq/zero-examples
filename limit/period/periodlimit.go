@@ -28,8 +28,8 @@ func main() {
 
 	store := redis.New(*rdx, redis.WithPass(*rdxPass))
 	fmt.Println(store.Ping())
-	lmt := limit.NewPeriodLimit(seconds, 5, store, *rdxKey)
-	timer := time.NewTimer(time.Second * seconds)
+	lmt := limit.NewPeriodLimit(seconds, 3, store, *rdxKey) // 每5秒允许3次
+	timer := time.NewTimer(time.Second * seconds * 10)      // 延长程序运行时间
 	quit := make(chan struct{})
 	defer timer.Stop()
 	go func() {
@@ -44,17 +44,24 @@ func main() {
 		wait.Add(1)
 		go func() {
 			for {
+				time.Sleep(time.Second)
 				select {
 				case <-quit:
 					wait.Done()
 					return
 				default:
-					if v, err := lmt.Take(strconv.FormatInt(int64(i), 10)); err == nil && v == limit.Allowed {
+					key := strconv.FormatInt(int64(i), 10)
+					v, err := lmt.Take(key)
+					if err == nil && v == limit.Allowed {
+						fmt.Printf("AllowedQuota key: %v\n", key)
 						atomic.AddInt32(&allowed, 1)
 					} else if err != nil {
 						log.Fatal(err)
-					} else {
+					} else if v == limit.OverQuota {
+						fmt.Printf("OverQuota key: %v\n", key)
 						atomic.AddInt32(&denied, 1)
+					} else if v == limit.HitQuota {
+						fmt.Printf("HitQuota key: %v\n", key)
 					}
 				}
 			}

@@ -30,7 +30,7 @@ func main() {
 	flag.Parse()
 
 	var err error
-	body := "hello world!"
+	body := "admin"
 	if *crypt {
 		bodyBytes, err := codec.EcbEncrypt(internal.Key, []byte(body))
 		if err != nil {
@@ -95,3 +95,25 @@ func main() {
 	fmt.Println(resp.Status)
 	io.Copy(os.Stdout, resp.Body)
 }
+
+/*
+待编码字符：
+"admin"
+
+对应的字节数组：
+[97,100,109,105,110]
+
+对应的二进制表示：
+[01100001,01100100,01101101,01101001,01101110]
+
+重新按照6bit进行分组(最后一组不足6bit,在后面补0)：
+[011000,010110,010001,101101,011010,010110,1110 00]
+
+转换成整数表示：
+[24,22,17,45,26,22,56]
+
+查表得到对应字符(不足4byte,补'=')：
+['Y','W','R','t','a','W','4','=']
+
+可见字符表(大写字母 + 小写字母 + 数字 + '+' + '/')：
+*/

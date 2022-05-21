@@ -5,7 +5,7 @@
     "MaxConns": 1000000,
     "Rpc": {
         "Etcd": {
-            "Hosts": ["etcd.discov:2379"],
+            "Hosts": [":2379"],
             "Key": "zrpc"
         }
     }

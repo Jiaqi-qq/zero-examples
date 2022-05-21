@@ -57,6 +57,9 @@ func main() {
 		}); err != nil {
 			log.Fatal(err)
 		}
+		if err := stm.CloseSend(); err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	wg.Wait()

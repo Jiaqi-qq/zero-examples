@@ -16,8 +16,8 @@ import (
 
 const (
 	duration        = time.Minute * 5
-	breakRange      = 20
-	workRange       = 50
+	breakRange      = 5
+	workRange       = 10
 	requestInterval = time.Millisecond
 	// multiply to make it visible in plot
 	stateFator = float64(time.Second/requestInterval) / 2
@@ -62,6 +62,7 @@ func (s *server) start() {
 				v = r.Int31n(workRange)
 			}
 			time.Sleep(time.Second * time.Duration(v+1))
+			fmt.Println("state: ", state)
 			state ^= 1
 			atomic.StoreInt32(&s.state, state)
 		}
@@ -99,14 +100,15 @@ func main() {
 	srv.start()
 
 	gb := breaker.NewBreaker()
+
 	fp, err := os.Create("result.csv")
 	logx.Must(err)
 	defer fp.Close()
 	fmt.Fprintln(fp, "seconds,state,googleCalls,netflixCalls")
 
 	var gm, nm metric
-	go func() {
-		ticker := time.NewTicker(time.Second)
+	go func() { // 开启goroutine将指标写入文件
+		ticker := time.NewTicker(time.Second) // 每秒写一次, 然后清空数据
 		defer ticker.Stop()
 		var seconds int
 		for range ticker.C {
@@ -125,9 +127,10 @@ func main() {
 		waitGroup.Done()
 	}()
 
+	// 开启goroutine打印进度条
 	go func() {
 		bar := pb.New(int(duration / time.Second)).Start()
-		ticker := time.NewTicker(time.Second)
+		ticker := time.NewTicker(time.Second) // 每秒+1
 		defer ticker.Stop()
 		for range ticker.C {
 			bar.Increment()

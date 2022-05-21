@@ -34,11 +34,11 @@ func main() {
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			if latch.TryBorrow() {
 				defer latch.Return()
-				runtime.LockOSThread()
-				defer runtime.UnlockOSThread()
+				runtime.LockOSThread()         // 当前goroutine独占此线程
+				defer runtime.UnlockOSThread() // 解除绑定
 				begin := time.Now()
 				for {
-					if time.Now().Sub(begin) > time.Millisecond*50 {
+					if time.Now().Sub(begin) > time.Millisecond*500 {
 						break
 					}
 				}

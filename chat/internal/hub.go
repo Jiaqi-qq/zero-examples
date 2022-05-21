@@ -4,16 +4,16 @@ package internal
 // clients.
 type Hub struct {
 	// Registered clients.
-	clients map[*Client]bool
+	clients map[*Client]bool // 上线clients
 
 	// Inbound messages from the clients.
-	broadcast chan []byte
+	broadcast chan []byte // 客户端发送的消息 ->广播给其他的客户端
 
 	// Register requests from the clients.
-	register chan *Client
+	register chan *Client // 注册channel，接收注册msg
 
 	// Unregister requests from clients.
-	unregister chan *Client
+	unregister chan *Client // 下线channel
 }
 
 func NewHub() *Hub {
@@ -28,14 +28,14 @@ func NewHub() *Hub {
 func (h *Hub) Run() {
 	for {
 		select {
-		case client := <-h.register:
+		case client := <-h.register: // 注册channel：存放到注册表中，数据流也就在这些client中发生
 			h.clients[client] = true
-		case client := <-h.unregister:
+		case client := <-h.unregister: // 下线channel：从注册表里面删除
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
 				close(client.send)
 			}
-		case message := <-h.broadcast:
+		case message := <-h.broadcast: // 广播消息：发送给注册表中的client中，send接收到并显示到client上
 			for client := range h.clients {
 				select {
 				case client.send <- message:

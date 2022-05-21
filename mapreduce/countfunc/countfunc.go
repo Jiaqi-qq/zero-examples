@@ -5,11 +5,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/proc"
 	"io"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -96,6 +98,16 @@ func reducer(input <-chan interface{}, writer mr.Writer, cancel func(error)) {
 }
 
 func main() {
+	profiler := proc.StartProfile()
+	defer profiler.Stop()
+
+	go func() {
+		for {
+			time.Sleep(time.Second * 1)
+			fmt.Println("num goroutine: ", runtime.NumGoroutine())
+		}
+	}()
+
 	if err := agent.Listen(agent.Options{}); err != nil {
 		log.Fatal(err)
 	}
@@ -120,7 +132,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(result)
+		fmt.Println("result:", result)
 		fmt.Println("Elapsed:", time.Since(start))
 		fmt.Println("Done")
 	}

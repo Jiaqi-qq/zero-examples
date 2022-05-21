@@ -47,6 +47,7 @@ func main() {
 
 	var c rest.RestConf
 	conf.MustLoad(*configFile, &c)
+	//rest.WithCustomCors()
 	srv := rest.MustNewServer(c, rest.WithCors())
 	defer srv.Stop()
 

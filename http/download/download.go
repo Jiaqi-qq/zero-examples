@@ -29,3 +29,5 @@ func main() {
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
 }
+
+// 127.0.0.1:8888/static/test.txt

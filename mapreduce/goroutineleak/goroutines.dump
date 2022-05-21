@@ -1,0 +1,25 @@
+goroutine 7 [running]:
+runtime/pprof.writeGoroutineStacks({0x48b1f8, 0xc0003a2058})
+	E:/Program Files/Go/src/runtime/pprof/pprof.go:694 +0x70
+runtime/pprof.writeGoroutine({0x48b1f8?, 0xc0003a2058?}, 0xc00004c800?)
+	E:/Program Files/Go/src/runtime/pprof/pprof.go:683 +0x2b
+runtime/pprof.(*Profile).WriteTo(0x45dede?, {0x48b1f8?, 0xc0003a2058?}, 0x34cde7?)
+	E:/Program Files/Go/src/runtime/pprof/pprof.go:332 +0x14b
+main.dumpGoroutines()
+	D:/Code/Goland/go-zero-project/zero-examples/mapreduce/goroutineleak/leak.go:25 +0x125
+main.main.func2()
+	D:/Code/Goland/go-zero-project/zero-examples/mapreduce/goroutineleak/leak.go:42 +0x31
+created by main.main
+	D:/Code/Goland/go-zero-project/zero-examples/mapreduce/goroutineleak/leak.go:40 +0xaa
+
+goroutine 1 [chan receive]:
+main.main()
+	D:/Code/Goland/go-zero-project/zero-examples/mapreduce/goroutineleak/leak.go:67 +0xf2
+
+goroutine 6 [sleep]:
+time.Sleep(0xb2d05e00)
+	E:/Program Files/Go/src/runtime/time.go:194 +0x133
+main.main.func1()
+	D:/Code/Goland/go-zero-project/zero-examples/mapreduce/goroutineleak/leak.go:36 +0x8f
+created by main.main
+	D:/Code/Goland/go-zero-project/zero-examples/mapreduce/goroutineleak/leak.go:34 +0x6c

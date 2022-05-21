@@ -1,6 +1,6 @@
 module github.com/zeromicro/zero-examples
 
-go 1.17
+go 1.18
 
 require (
 	github.com/dchest/siphash v1.2.2

@@ -2,7 +2,7 @@
     "Name": "rpc.grace",
     "ListenOn": "0.0.0.0:3456",
     "Etcd": {
-        "Hosts": ["etcd.discov:2379"],
+        "Hosts": [":2379"],
         "Key": "zrpc"
     }
 }

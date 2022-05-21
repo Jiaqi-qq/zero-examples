@@ -1,6 +1,6 @@
 module upload
 
-go 1.17
+go 1.18
 
 require github.com/zeromicro/go-zero v1.3.2
 

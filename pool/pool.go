@@ -15,28 +15,30 @@ import (
 func main() {
 	var count int32
 	var consumed int32
-	pool := syncx.NewPool(80, func() interface{} {
+	pool := syncx.NewPool(3, func() interface{} {
 		fmt.Printf("+ %d\n", atomic.AddInt32(&count, 1))
 		return 1
-	}, func(interface{}) {
-		fmt.Printf("- %d\n", atomic.AddInt32(&count, -1))
+	}, func(i interface{}) {
+		fmt.Printf("[%v]- %d\n", i, atomic.AddInt32(&count, -1))
 	}, syncx.WithMaxAge(time.Second))
 
 	var waitGroup sync.WaitGroup
 	quit := make(chan lang.PlaceholderType)
-	waitGroup.Add(100)
-	for i := 0; i < 100; i++ {
+	waitGroup.Add(5)
+	for i := 0; i < 5; i++ {
 		go func() {
 			defer func() {
 				waitGroup.Done()
 				fmt.Println("routine quit")
 			}()
 
+			ticker := time.NewTicker(time.Second)
+
 			for {
 				select {
 				case <-quit:
 					return
-				default:
+				case <-ticker.C:
 					x := pool.Get().(int)
 					atomic.AddInt32(&consumed, 1)
 					pool.Put(x)

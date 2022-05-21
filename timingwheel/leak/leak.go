@@ -15,7 +15,7 @@ import (
 
 const numItems = 1000000
 
-var round = flag.Int("r", 3, "rounds to go")
+var round = flag.Int("r", 30, "rounds to go")
 
 func main() {
 	defer proc.StartProfile().Stop()
@@ -43,8 +43,7 @@ func do() {
 	fmt.Println(getMemUsage())
 }
 
-func execute(k, v interface{}) {
-}
+func execute(k, v interface{}) {}
 
 func getMemUsage() string {
 	runtime.GC()

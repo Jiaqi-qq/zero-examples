@@ -1,7 +1,7 @@
 {
   "Name": "edge-api",
   "Host": "0.0.0.0",
-  "Port": 3456,
+  "Port": 3458,
   "Portal": {
     "Etcd": {
       "Hosts": [

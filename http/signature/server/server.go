@@ -67,12 +67,13 @@ func main() {
 }
 
 func createTempFile(body []byte) (string, error) {
-	tmpFile, err := ioutil.TempFile(os.TempDir(), "go-unit-*.tmp")
+	tmpFile, err := os.CreateTemp("./", "go-unit-*.tmp")
+	//tmpFile, err := ioutil.TempFile(os.TempDir(), "go-unit-*.tmp")
 	if err != nil {
 		return "", err
 	}
 
-	tmpFile.Close()
+	//defer tmpFile.Close()
 	err = ioutil.WriteFile(tmpFile.Name(), body, os.ModePerm)
 	if err != nil {
 		return "", err

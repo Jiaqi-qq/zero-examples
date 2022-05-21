@@ -18,14 +18,14 @@ func main() {
 	for i := 0; i < round; i++ {
 		go func() {
 			defer wg.Done()
-			val, err := barrier.Do("once", func() (interface{}, error) {
-				time.Sleep(time.Second)
+			val, b, err := barrier.DoEx("once", func() (interface{}, error) {
+				time.Sleep(time.Second * 3)
 				return stringx.RandId(), nil
 			})
 			if err != nil {
 				fmt.Println(err)
 			} else {
-				fmt.Println(val)
+				fmt.Println(val, b)
 			}
 		}()
 	}

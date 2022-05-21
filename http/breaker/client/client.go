@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	freq     = flag.Int("freq", 100, "frequency")
+	freq     = flag.Int("freq", 200, "frequency")
 	duration = flag.String("duration", "10s", "duration")
 )
 
@@ -42,13 +42,13 @@ func (m *metric) addOk() {
 
 func (m *metric) addFail() {
 	m.lock.Lock()
-	m.ok++
+	m.fail++
 	m.lock.Unlock()
 }
 
 func (m *metric) addReject() {
 	m.lock.Lock()
-	m.ok++
+	m.reject++
 	m.lock.Unlock()
 }
 
